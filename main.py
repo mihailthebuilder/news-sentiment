@@ -1,5 +1,7 @@
 """.."""
 import requests
+from bs4 import BeautifulSoup as bs
+
 
 # get a valid input
 url = input("Enter the site you wish to analyse: ")
@@ -11,5 +13,10 @@ if url[0:9] != "https://":
 try:
     req = requests.get(url)
 
-finally:
-    print(f"An error occurred when submitting a request with the '{url}' URL")
+    soup = bs(req.text, "lxml")
+
+
+except requests.exceptions.ConnectionError as error:
+    print(
+        f"\nAn error occurred when submitting a request with the '{url}' URL.\n\nError message: '{error}'"
+    )
