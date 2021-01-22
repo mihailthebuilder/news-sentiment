@@ -11,5 +11,5 @@ if url[0:9] != "https://":
 try:
     req = requests.get(url)
 
-except:
+finally:
     print(f"An error occurred when submitting a request with the '{url}' URL")
