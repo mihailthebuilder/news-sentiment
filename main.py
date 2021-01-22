@@ -1,7 +1,7 @@
 """.."""
 import requests
 from bs4 import BeautifulSoup as bs
-from nltk.tokenize import RegexpTokenizer
+import nltk
 
 # get a valid input
 url = input("Enter the site you wish to analyse: ")
@@ -20,8 +20,15 @@ try:
     # without separator, text in different html elements would be joined together
     page_text = soup.getText(separator=" ")
 
-    tokenizer = RegexpTokenizer("\w+")
-    tokens = tokenizer.tokenize(page_text)
+    # get stopwords
+    sw = nltk.corpus.stopwords.words("english")
+
+    # get all words in lower case, excluding stopwords
+    tokenizer = nltk.tokenize.RegexpTokenizer(r"\w+")
+    tokens = [
+        token.lower() for token in tokenizer.tokenize(page_text) if token not in sw
+    ]
+
     print(tokens)
 
 except requests.exceptions.ConnectionError as error:
