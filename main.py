@@ -2,15 +2,14 @@
 import requests
 
 # get a valid input
+url = input("Enter the site you wish to analyse: ")
 
-while True:
-    url = input("Enter the site you wish to analyse: ")
+# add https if not in there at start
+if url[0:9] != "https://":
+    url = "https://" + url
 
-# check if valid input
+try:
+    req = requests.get(url)
 
-req = requests.get(url)
-
-print(req.text)
-
-
-# calculate the sentiment using the dictionary
+except:
+    print(f"An error occurred when submitting a request with the '{url}' URL")
