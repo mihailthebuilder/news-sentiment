@@ -1,6 +1,7 @@
 """.."""
 import requests
 from bs4 import BeautifulSoup as bs
+from nltk.tokenize import RegexpTokenizer
 
 # get a valid input
 url = input("Enter the site you wish to analyse: ")
@@ -12,9 +13,16 @@ if url[0:9] != "https://":
 # catch errors in requests.get statement
 try:
     req = requests.get(url)
+
+    # get the text
     soup = bs(req.text, "lxml")
+
+    # without separator, text in different html elements would be joined together
     page_text = soup.getText(separator=" ")
-    print(page_text)
+
+    tokenizer = RegexpTokenizer("\w+")
+    tokens = tokenizer.tokenize(page_text)
+    print(tokens)
 
 except requests.exceptions.ConnectionError as error:
     print(
