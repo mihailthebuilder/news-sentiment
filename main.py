@@ -15,11 +15,27 @@ try:
     req = requests.get(url)
 
     # get the text
-    soup = bs(req.text, "lxml")
+    soup = bs(req.text, "lxml").main
+
+    # remove pieces of
+    for html_tag in soup.find_all():
+
+        words_num = len(html_tag.get_text(strip=True).split())
+
+        if words_num <= 2:
+            html_tag.extract()
+
+    with open("testing.html", "w") as file:
+        file.write(soup.prettify())
 
     # without separator, text in different html elements would be joined together
-    page_text = soup.getText(separator=" ")
+    page_text = soup.getText(separator=". ")
 
+    with open("testing.txt", "w") as file:
+        file.write(page_text)
+    # print(page_text)
+
+    """
     # get stopwords
     sw = nltk.corpus.stopwords.words("english")
 
@@ -30,6 +46,7 @@ try:
     ]
 
     print(tokens)
+    """
 
 except requests.exceptions.ConnectionError as error:
     print(
