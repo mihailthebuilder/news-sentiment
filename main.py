@@ -1,6 +1,7 @@
 """.."""
-import requests
 import json
+import re
+import requests
 from bs4 import BeautifulSoup as bs
 from afinn import Afinn
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
@@ -24,7 +25,7 @@ try:
 
     for text in soup_li:
         if len(text.split()) >= 3:
-            text_lower = text.lower()
+            text_lower = re.sub(r"\u2018|\u2019|\u2014", "", text.lower())
 
             afinn_score = afinn.score(text_lower) * 20  # from -5 to +5
             vader_score = (
