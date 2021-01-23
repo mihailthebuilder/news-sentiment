@@ -18,8 +18,11 @@ try:
     req = requests.get(url)
     req_text = req.text
 
+    # remove unicode characters
+    decoded_text = req_text.encode("ascii", "ignore").decode("unicode_escape")
+
     # get the individual text pieces inside the web page as separate list elements
-    soup_li = bs(req_text, "lxml").body.getText(separator="||").split("||")
+    soup_li = bs(decoded_text, "lxml").body.getText(separator="||").split("||")
 
     # list which will hold the pieces of text together with their scores
     text_li = []
