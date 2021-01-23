@@ -94,7 +94,11 @@ def sentiment_analyze(url):
                 )
 
         if count_text == 0:
-            return {"success": False, "message": "Unable to calculate the scores."}
+            return {
+                "success": False,
+                "message": "Unable to calculate any scores.",
+                "raw_data": text_li,
+            }
 
         else:
 
@@ -112,10 +116,10 @@ def sentiment_analyze(url):
     except requests.exceptions.ConnectionError as error:
         return {
             "success": False,
-            "message": f"\nAn error occurred when trying to access the '{url}' URL.\n\nError message: '{error}'",
+            "message": f"An error occurred when trying to access the '{url}' URL. Error message: '{error}'",
         }
     except Exception as error:
         return {
             "success": False,
-            "message": f"\nSomething went wrong when processing the '{url}' URL.\n\nError message: '{error}'",
+            "message": f"Something went wrong when processing the '{url}' URL.Error message: '{error}'",
         }
