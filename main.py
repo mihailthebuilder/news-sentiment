@@ -26,76 +26,70 @@ try:
     sum_text = 0
     count_text = 0
 
+    max_score = 0
+    max_text = ""
+    min_score = 0
+    min_text = ""
+
     for text in soup_li:
         if len(text.split()) >= 5:
             text_lower = re.sub(r"\u2018|\u2019|\u2014", "", text.lower())
 
-            afinn_score = round(afinn.score(text_lower) * 100 / 6, 2)  # from -6 to +6
-            vader_score = round(
-                (analyzer.polarity_scores(text_lower)["compound"] * 100), 2
-            )  # from -1 to +1
+            afinn_score = afinn.score(text_lower)  # usually from -5 to +5
+            vader_score = analyzer.polarity_scores(text_lower)[
+                "compound"
+            ]  # from -1 to +1
 
             combined_score = 0
 
-            if afinn_score == 0:
-                if vader_score != 0:
-                    combined_score = round(vader_score)
-            elif afinn_score != 0:
-                if vader_score != 0:
-                    combined_score = round((afinn_score + vader_score) / 2)
+            if afinn_score != 0 or vader_score != 0:
+                count_text += 1
+
+                if afinn_score == 0:
+                    combined_score = vader_score
+                elif vader_score == 0:
+                    combined_score = afinn_score
                 else:
-                    combined_score = round(afinn_score)
+                    combined_score = (afinn_score * 2 + vader_score * 10) / 2
+
+                sum_text += 10 if combined_score > 0 else -10
+
+                if combined_score > max_score:
+                    max_score = combined_score
+                    max_text = text_lower
+                elif combined_score < min_score:
+                    min_score = combined_score
+                    min_text = text_lower
 
             text_li.append(
                 {
                     "text": text_lower,
-                    "score": combined_score,
+                    "combined_score": combined_score,
                     "vader_score": vader_score,
-                    "afinn_score": afinn.score(text_lower),
+                    "afinn_score": afinn_score,
                 }
             )
 
     with open("output.json", "w") as file:
         json.dump(text_li, file)
 
-    min_value = 0
-    key_min = 0
-    max_value = 0
-    key_max = 0
-
-    for key, value in enumerate(text_li):
-        if value["score"] > max_value:
-            key_max = key
-            max_value = value["score"]
-        if value["score"] < min_value:
-            key_min = key
-            min_value = value["score"]
-
-    sum_text = 0
-    count = 0
-
-    for text in text_li:
-        if text["score"] != 0:
-            sum_text += text["score"]
-            count += 1
-
-    print(f"\n'{url}' has an average positivity score of {round(sum_text/count)}")
     print(
-        f"\nThe most negative score was {min_value}, which came from this piece of text '{text_li[key_min]['text']}'"
+        f"\n'{url}' has an average positivity score of {round(sum_text/count_text*2)}."
     )
     print(
-        f"\nThe most positive score was {max_value}, which came from this piece of text '{text_li[key_max]['text']}'"
+        f"\nThe most negative score was {min_score}, which came from this piece of text '{min_text}'"
     )
     print(
-        "\n**Note: all values range between -100 and 100. The processed data has been dumped into the 'output.json' file."
+        f"\nThe most positive score was {max_score}, which came from this piece of text '{max_text}'"
     )
+    print(f"\n**Note: scores usually range between -10 and +10")
 
 # catch errors in requests.get statement
 except requests.exceptions.ConnectionError as error:
     print(
         f"\nAn error occurred when trying to access the '{url}' URL.\n\nError message: '{error}'"
     )
-except Exception as e:
+except Exception as error:
     print(
-        f"Something went wrong after a successful request was made to the '{url}' URL.\n\nError message: '{e}'"
+        f"Something went wrong after a successful request was made to the '{url}' URL.\n\nError message: '{error}'"
     )
