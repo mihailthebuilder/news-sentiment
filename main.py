@@ -15,8 +15,19 @@ if url[0:8] != "https://":
     url = "https://" + url
 
 try:
-    req = requests.get(url)
-    req_text = req.text
+    my_session = requests.session()
+    for_cookies = requests.get(url)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0"
+    }
+
+    response = my_session.get(url, headers=headers, cookies=for_cookies)
+
+    req_text = response.text
+
+    # checking request html output
+    # with open("testing.html", "w") as file:
+    #    file.write(req_text)
 
     # remove unicode characters
     decoded_text = req_text.encode("ascii", "ignore").decode("unicode_escape")
