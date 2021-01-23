@@ -1,7 +1,5 @@
 """Calculates how positive a website's content is. Scores usually range between -10 and +10"""
 import json
-import re
-import urllib.request as Ur
 import requests
 from bs4 import BeautifulSoup as bs
 from afinn import Afinn
@@ -16,7 +14,7 @@ if url[0:8] != "https://":
 
 try:
     my_session = requests.session()
-    for_cookies = requests.get(url)
+    for_cookies = requests.get(url).cookies
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0"
     }
@@ -93,7 +91,7 @@ try:
                 }
             )
 
-    with open("output.json", "w") as file:
+    with open("raw_data.json", "w") as file:
         json.dump(text_li, file)
 
     if count_text == 0:
@@ -112,14 +110,10 @@ try:
         )
         print("\n**Note: scores usually range between -10 and +10")
 
-    print("\nRaw data has been placed in the `output.json` file")
+    print("\nRaw data has been placed in the `raw_data.json` file")
 
 # catch errors in requests.get statement
 except requests.exceptions.ConnectionError as error:
     print(
         f"\nAn error occurred when trying to access the '{url}' URL.\n\nError message: '{error}'"
-    )
-except Exception as error:
-    print(
-        f"\nSomething went wrong after a successful request was made to the '{url}' URL.\n\nError message: '{error}'"
     )
