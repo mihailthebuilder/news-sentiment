@@ -16,9 +16,10 @@ if url[0:8] != "https://":
 
 try:
     req = requests.get(url)
+    req_text = req.text
 
     # get the individual text pieces inside the web page as separate list elements
-    soup_li = bs(req.text, "lxml").body.getText(separator="||").split("||")
+    soup_li = bs(req_text, "lxml").body.getText(separator="||").split("||")
 
     # list which will hold the pieces of text together with their scores
     text_li = []
