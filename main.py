@@ -68,15 +68,15 @@ try:
             key_min = key
             min_value = value["score"]
 
-    sum = 0
+    sum_text = 0
     count = 0
 
     for text in text_li:
         if text["score"] != 0:
-            sum += text["score"]
+            sum_text += text["score"]
             count += 1
 
-    print(f"\n'{url}' has an average positivity score of {round(sum/count)}")
+    print(f"\n'{url}' has an average positivity score of {round(sum_text/count)}")
     print(
         f"\nThe most negative score was {min_value}, which came from this piece of text '{text_li[key_min]['text']}'"
     )
