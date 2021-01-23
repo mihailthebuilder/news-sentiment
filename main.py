@@ -1,6 +1,7 @@
 """Calculates how positive a website's content is. Scores usually range between -10 and +10"""
 import json
 import re
+import urllib.request as Ur
 import requests
 from bs4 import BeautifulSoup as bs
 from afinn import Afinn
@@ -43,13 +44,8 @@ try:
         # only look at pieces of text with 5+ sentences
         if len(text.split()) >= 5:
 
-            # remove weird characters that sometimes appear
-            text_lower = re.sub(r"\u2018|\u2019|\u2014", "", text.lower())
-
-            afinn_score = afinn.score(text_lower)  # usually from -5 to +5
-            vader_score = analyzer.polarity_scores(text_lower)[
-                "compound"
-            ]  # from -1 to +1
+            afinn_score = afinn.score(text)  # usually from -5 to +5
+            vader_score = analyzer.polarity_scores(text)["compound"]  # from -1 to +1
 
             combined_score = 0
 
@@ -67,15 +63,15 @@ try:
 
                 if combined_score > max_score:
                     max_score = combined_score
-                    max_text = text_lower
+                    max_text = text
 
                 elif combined_score < min_score:
                     min_score = combined_score
-                    min_text = text_lower
+                    min_text = text
 
             text_li.append(
                 {
-                    "text": text_lower,
+                    "text": text,
                     "combined_score": combined_score,
                     "vader_score": vader_score,
                     "afinn_score": afinn_score,
