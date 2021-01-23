@@ -17,11 +17,14 @@ try:
     req = requests.get(url)
 
     # get the individual text pieces inside the web page as separate list elements
-    soup_li = bs(req.text, "lxml").main.getText(separator="||").split("||")
+    soup_li = bs(req.text, "lxml").body.getText(separator="||").split("||")
 
     text_li = []
     afinn = Afinn()
     analyzer = SentimentIntensityAnalyzer()
+
+    sum_text = 0
+    count_text = 0
 
     for text in soup_li:
         if len(text.split()) >= 5:
@@ -48,7 +51,7 @@ try:
                     "text": text_lower,
                     "score": combined_score,
                     "vader_score": vader_score,
-                    "afinn_score": afinn_score,
+                    "afinn_score": afinn.score(text_lower),
                 }
             )
 
@@ -90,5 +93,9 @@ try:
 # catch errors in requests.get statement
 except requests.exceptions.ConnectionError as error:
     print(
-        f"\nAn error occurred when submitting a request with the '{url}' URL.\n\nError message: '{error}'"
+        f"\nAn error occurred when trying to access the '{url}' URL.\n\nError message: '{error}'"
+    )
+except Exception as e:
+    print(
+        f"Something went wrong after a successful request was made to the '{url}' URL.\n\nError message: '{e}'"
     )
