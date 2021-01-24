@@ -104,5 +104,20 @@ If we can't generate any scores from the website, we get an empty array:
 
 # Scoring methodology
 
+After successfully reading a website, the script uses [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) to break down the site's text content into separate chunks based on the structure of the HTML.
+
+Each of these pieces of text is run through two sentiment analysis libraries to generate positivity scores: 
+- [afinn](https://github.com/fnielsen/afinn) - uses the AFINN methodology developed by Finn Arup Nielsen. Results range between -5 and +5, but they can sometimes go beyond those two thresholds.
+- [vaderSentiment](https://github.com/cjhutto/vaderSentiment) - uses the VADER (Valence Aware Dictionary and sEntiment Reasoner) methodology created by C.J. Hutto and Eric Gilbert. Produces values between -1 and +1.
+
+The two scores are combined using the following procedure:
+- If only one of the two scores is 0, the composite score takes the non-0 value.
+- If both are 0, the composite score is 0.
+- If none are 0, the two individual scores are standardised to range between -10 and +10. The composite score then takes the average between these two values: `(afinn_score * 2 + vader_score * 10) / 2`.
+
+To arrive at the website's total score, we add each of the composite scores as a +10 or a -10, depending on whether the composite score is positive or negative. This value is  divided by the number of non-0 composite scores and multiplied by 2 to arrive at the final score of the site. 
+
+The reason I multiply by 2 is because it somewhat standardises the scores so that they range between -10 and +10. There is definitely scope to improve this methodology :)
+
 # License 
 Licensed under [Mozilla Public License 2.0](./LICENSE)
