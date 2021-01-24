@@ -124,7 +124,7 @@ The reason I multiply by 2 is because it somewhat standardises the scores so tha
 
 Here are some extracts of the results I obtained with this script
 
-![positivity results](./demo/positivity_results.jpg)
+![positivity results](./demo/positivity_results.png)
 
 ```json
 unherd -6
