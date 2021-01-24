@@ -12,3 +12,5 @@ dailymail.co.uk
 arstechnica.com
 channelnewsasia.com
 straitstimes.com
+nowebsite
+google.com
