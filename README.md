@@ -9,6 +9,7 @@ Analyzes the overall positivity of news sites. Can be used on any other sites as
   - [`summary.json`](#summaryjson)
   - [`raw_data.json`](#raw_datajson)
 - [Scoring methodology](#scoring-methodology)
+- [Sample results](#sample-results)
 - [License](#license)
 
 # How to use
@@ -118,6 +119,29 @@ The two scores are combined using the following procedure:
 To arrive at the website's total score, we add each of the composite scores as a +10 or a -10, depending on whether the composite score is positive or negative. This value is  divided by the number of non-0 composite scores and multiplied by 2 to arrive at the final score of the site. 
 
 The reason I multiply by 2 is because it somewhat standardises the scores so that they range between -10 and +10. There is definitely scope to improve this methodology :)
+
+# Sample results
+
+Here are some extracts of the results I obtained with this script
+
+![positivity results](./demo/positivity_results.jpg)
+
+```json
+unherd -6
+ricemedia -5
+guardian -4
+breitbart -3
+mothership -2
+ft -1
+wsj +2
+straits times +2
+daily mail +3
+ars technica +3
+wired +5
+BBC +6
+channel news asia +7
+reasons to be cheerful +9
+```
 
 # License 
 Licensed under [Mozilla Public License 2.0](./LICENSE)
