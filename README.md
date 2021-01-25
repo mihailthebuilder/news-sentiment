@@ -1,6 +1,6 @@
 # News Sentiment
 
-Analyzes the overall positivity of news sites. Can be used on any other sites as well.
+Python script that analyzes the overall positivity of news sites. Can be used on any other sites as well.
 
 # Table of Contents
 - [News Sentiment](#news-sentiment)
